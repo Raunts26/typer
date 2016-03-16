@@ -152,18 +152,56 @@ TYPER.prototype = {
 
 				this.guessed_words += 1;
 
-                //update player score
-                this.player.score = this.guessed_words;
+        //update player score
+        this.player.score = this.guessed_words;
 
-				//loosin uue sõna
-				this.generateWord();
+        if(this.player.score === 1) {
+          this.winGame();
+        } else {
+          //loosin uue sõna
+          this.generateWord();
+        }
 			}
 
 			//joonistan uuesti
 			this.word.Draw();
 		}
 
-	} // keypress end
+	}, // keypress end
+
+  winGame: function(event) {
+    console.log("WINGAME SEES");
+
+    this.ctx.clearRect( 0, 0, this.canvas.width, this.canvas.height);
+
+    // Canvasele joonistamine
+    this.ctx.textAlign = 'left';
+    this.ctx.font = '70px Courier';
+
+    this.ctx.fillText(this.player.score, 200, 200);
+    console.log(this.ctx);
+
+    console.log("game over");
+    //return;
+
+    //AJAX
+    var xhttp = new XMLHttpRequest();
+
+    //Mis juhtub kui päring lõppeb
+    xhttp.onreadystatechange = function() {
+      //console.log(xhttp.readyState);
+      if (xhttp.readyState == 4 && xhttp.status == 200) {
+       console.log(xhttp.responseText);
+      }
+    };
+
+    //Teeb päringu
+    xhttp.open("GET", "save.php?user="+ this.player.name +"&score="+ this.player.score +"", true);
+    xhttp.send();
+
+
+
+  }
 
 };
 
